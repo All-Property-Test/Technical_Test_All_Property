@@ -1,0 +1,29 @@
+1. Write a script that accepts a positive integer range and, for each increment in the range, prints:
+   - "Fizz" if a multiple of 3
+   - "Buzz" if a multiple of 5
+   - The integer itself otherwise. 
+   
+   E.g. for f[12..16], the output is "Fizz 13 14 FizzBuzz 16".
+
+
+Answer:
+
+<?php
+
+   function FizzBuzz(){
+        $integerRange = array(12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30);
+        $count = count($integerRange);
+        for($i=0;$i<$count;$i++){
+            if ($integerRange[$i] % 15 == 0) {
+                echo 'FizzBuzz ';
+            } elseif ($integerRange[$i] % 3 == 0) {
+                echo 'Fizz ';
+            } elseif ($integerRange[$i] % 5 == 0) {
+                echo 'Buzz ';
+            } else {
+                echo $integerRange[$i] . ' ';
+            }
+        }
+   }
+
+?>
