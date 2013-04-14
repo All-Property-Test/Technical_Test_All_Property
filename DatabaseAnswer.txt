@@ -1,0 +1,41 @@
+Database Part
+---------------------------------------------------------------
+Comment : Here I decided to use MyISAM storage engine, rather than InnoDB for following 2 reasons
+1) MyISAM has much larger stroage limit than InnoDB. As of MySQL 5.1, MyISAM has 256 TB and InnoDB has 64 TB.
+    For a property website, I suppose that there will be large amount of data coming in everyday and overtime that could hit the cap.
+2) Notable advantage of using InnoDB is its capability to use row level locking, rollback and crash recovery features for highly data 
+    sensitive areas such as Banks. For property website, I suppose that MyISAM will be good enough to keep it up and running smoothly.
+    But in case we need higher data protection, we should change to InnoDB.
+
+data.sql:
+CREATE TABLE Property (
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Type TINYINT default 1,
+    Title CHAR(255) default '',
+    Address TEXT NOT NULL,
+    Bedroom INT default 0,
+    Living_room INT default 0,
+    Diningroom INT default 0,
+    Size Decimal(6,2) default 0.0
+) ENGINE=MyISAM;
+INSERT INTO `property`(`Type`, `Title`, `Address`, `Bedroom`, `Living_room`, `Diningroom`, `Size`) VALUES (1,'Nice Hdb flat Near Bishan','Bishan St 21',3,1,1,1240)
+INSERT INTO `property`(`Type`, `Title`, `Address`, `Bedroom`, `Living_room`, `Diningroom`, `Size`) VALUES (2,'Condo Near Yew Tee','Yew Tee St 22',3,1,1,1200)
+
+CREATE TABLE HDB (
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    PID BIGINT NOT NULL,
+    HDBBlock INT NOT NULL,
+    INDEX idx_PID (PID), 
+    FOREIGN KEY (PID) REFERENCES Property(ID)
+) ENGINE=MyISAM;  // correction : changed InnoDB to MyISAM  |  reason : since HDB table has foreign key (PID) that references to Property table which has MyISAM storage engine, they need to have same storage engines. Otherwise cannot create table.
+INSERT INTO `hdb`(`PID`, `HDBBlock`) VALUES (1,232)
+
+
+CREATE TABLE Condo (
+    ID BIGINT AUTO_INCREMENT,
+    PID BIGINT NOT NULL, // correction : changed INT to BIGINT  | reason : PID is BIGINT in parent Property table
+    SwimmingPool TINYINT default 0,
+    INDEX idx_PID (PID), 
+    FOREIGN KEY (PID) REFERENCES Property(ID)
+) ENGINE=MyISAM;  // correction : changed InnoDB to MyISAM  |  reason : since Condo table has foreign key (PID) that references to Property table which has MyISAM storage engine, they need to have same storage engines. Otherwise cannot create table.
+INSERT INTO `condo`(`PID`, `SwimmingPool`) VALUES (2,1)
